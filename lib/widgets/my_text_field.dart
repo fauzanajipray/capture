@@ -20,6 +20,7 @@ class MyTextField extends StatefulWidget {
   final bool filled;
   final bool readOnly;
   final Color? textColor;
+  final Color? bgColor;
 
   const MyTextField({
     Key? key,
@@ -36,6 +37,7 @@ class MyTextField extends StatefulWidget {
     this.onEditingComplete,
     this.filled = true,
     this.textColor,
+    this.bgColor,
     this.onChange,
     this.validator,
     this.readOnly = false,
@@ -157,9 +159,9 @@ class MyTextFieldState extends State<MyTextField> {
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
+        fillColor: widget.bgColor,
         // fontStyle:  TextStyle(
         //   color: Theme.of(context).colorScheme.error,,
-
         // ),
       ),
     );

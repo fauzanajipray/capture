@@ -30,7 +30,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF304AAC),
-          secondary: const Color.fromARGB(255, 57, 81, 98),
+          primaryContainer: const Color(0x3348B5D6),
           onSurfaceVariant: Colors.grey,
         ),
       ),

@@ -1,20 +1,22 @@
-import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/widgets/my_button.dart';
 import 'package:capture/widgets/my_text_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +33,31 @@ class _SignInPageState extends State<SignInPage> {
                   children: <Widget>[
                     const Center(
                       child: Text(
-                        'Sign in',
+                        'Create Account',
                         style: TextStyle(
                           fontSize: 20,
-                          fontFamily: 'Poppins',
                           fontWeight: FontWeight.w600,
                           height: 0,
                         ),
                       ),
                     ),
                     const SizedBox(height: 50),
+                    MyTextField(
+                      controller: _nameController,
+                      labelText: 'Name',
+                      // errorText: extractErrorMessageFromError(emailError),
+                      bgColor: Theme.of(context).colorScheme.primaryContainer,
+                      type: TextFieldType.normal,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                      filled: true,
+                      textColor: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    const SizedBox(height: 16),
                     MyTextField(
                       controller: _emailController,
                       labelText: 'Email',
@@ -80,6 +97,23 @@ class _SignInPageState extends State<SignInPage> {
                       textColor: Theme.of(context).colorScheme.onSurface,
                     ),
                     const SizedBox(height: 16),
+                    MyTextField(
+                      controller: _passwordConfirmController,
+                      labelText: 'Confirmation Password',
+                      // errorText: extractErrorMessageFromError(passwordError),
+                      bgColor: Theme.of(context).colorScheme.primaryContainer,
+                      type: TextFieldType.password,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your confirmation password';
+                        }
+                        return null;
+                      },
+                      filled: true,
+                      textColor: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    const SizedBox(height: 16),
                     GestureDetector(
                       onTap: () {
                         if (kDebugMode) {
@@ -111,42 +145,6 @@ class _SignInPageState extends State<SignInPage> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Don’t have account ?',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignUpPage()),
-                            );
-                            if (kDebugMode) {
-                              print('Sign Up!');
-                            }
-                          },
-                          child: const Text(
-                            ' Sign up',
-                            style: TextStyle(
-                              color: Color(0xFF304AAC),
-                              fontSize: 13,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -202,7 +200,7 @@ class _SignInPageState extends State<SignInPage> {
                           margin: const EdgeInsets.all(5),
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.fitHeight,
                               image:
                                   AssetImage('assets/images/logo_google.png'),
                             ),
@@ -221,7 +219,7 @@ class _SignInPageState extends State<SignInPage> {
                           margin: const EdgeInsets.all(5),
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.fitHeight,
                               image: AssetImage('assets/images/logo_fb.png'),
                             ),
                           ),
@@ -239,7 +237,7 @@ class _SignInPageState extends State<SignInPage> {
                           margin: const EdgeInsets.all(5),
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.fitHeight,
                               image: AssetImage('assets/images/logo_apple.png'),
                             ),
                           ),
@@ -247,6 +245,45 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                     ],
                   ),
+                  /*
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Do you have account?',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpPage()),
+                          );
+                          if (kDebugMode) {
+                            print('Sign In!');
+                          }
+                        },
+                        child: const Text(
+                          ' Sign in',
+                          style: TextStyle(
+                            color: Color(0xFF304AAC),
+                            fontSize: 13,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  */
                   const SizedBox(height: 50),
                 ],
               )
