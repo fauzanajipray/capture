@@ -150,6 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               Column(
                 children: [
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

@@ -1,5 +1,5 @@
+import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class OnboardPage extends StatefulWidget {
@@ -118,9 +118,11 @@ class _OnboardPageState extends State<OnboardPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (kDebugMode) {
-                      print('Skip tapped!');
-                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInPage()),
+                    );
                   },
                   child: const Text(
                     'Skip',

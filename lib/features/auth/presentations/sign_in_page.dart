@@ -130,9 +130,6 @@ class _SignInPageState extends State<SignInPage> {
                               MaterialPageRoute(
                                   builder: (context) => const SignUpPage()),
                             );
-                            if (kDebugMode) {
-                              print('Sign Up!');
-                            }
                           },
                           child: const Text(
                             ' Sign up',
@@ -152,6 +149,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               Column(
                 children: [
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
