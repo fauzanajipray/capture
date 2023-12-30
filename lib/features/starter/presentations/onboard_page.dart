@@ -1,15 +1,20 @@
+import 'package:capture/features/auth/cubit/auth_cubit.dart';
 import 'package:capture/features/auth/presentations/sign_in_page.dart';
+import 'package:capture/services/app_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-class OnboardPage extends StatefulWidget {
-  const OnboardPage({Key? key}) : super(key: key);
+class OnBoardPage extends StatefulWidget {
+  const OnBoardPage({Key? key}) : super(key: key);
 
   @override
-  State<OnboardPage> createState() => _OnboardPageState();
+  State<OnBoardPage> createState() => _OnBoardPageState();
 }
 
-class _OnboardPageState extends State<OnboardPage> {
+class _OnBoardPageState extends State<OnBoardPage> {
   final List<String> images = [
     'assets/images/vector_1.png',
     'assets/images/vector_2.png',
@@ -52,7 +57,8 @@ class _OnboardPageState extends State<OnboardPage> {
                       viewportFraction: 1.0,
                       initialPage: 0,
                       enableInfiniteScroll: true,
-                      autoPlay: false, // Menonaktifkan autoplay
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 6),
                       scrollDirection: Axis.horizontal,
                       onPageChanged: (index, reason) {
                         setState(() {
@@ -118,11 +124,11 @@ class _OnboardPageState extends State<OnboardPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()),
-                    );
+                    if (kDebugMode) {
+                      print('Hhehehe');
+                    }
+                    context.read<AuthCubit>().setAlreadyOnboard();
+                    context.go(Destination.signInPath);
                   },
                   child: const Text(
                     'Skip',
