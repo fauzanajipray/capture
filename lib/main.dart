@@ -119,9 +119,16 @@ class _MainAppState extends State<MainApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF304AAC),
+          primary: const Color(0xFF304AAC),
           primaryContainer: const Color(0x3348B5D6),
           onSurfaceVariant: Colors.grey,
         ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF304AAC),
+          surfaceTintColor: Color(0xFF304AAC),
+          foregroundColor: Colors.white,
+        ),
+        useMaterial3: true,
       ),
     );
   }

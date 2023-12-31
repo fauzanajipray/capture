@@ -29,6 +29,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   lottie: ^2.6.0
   carousel_slider: ^4.2.1
+  flutter_statusbarcolor_ns: ^0.5.0
 
 dev_dependencies:
   flutter_test:

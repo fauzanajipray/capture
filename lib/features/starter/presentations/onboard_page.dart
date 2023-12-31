@@ -1,5 +1,4 @@
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
-import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/services/app_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
