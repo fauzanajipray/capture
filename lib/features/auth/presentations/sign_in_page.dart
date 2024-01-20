@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
 import 'package:capture/features/auth/cubit/sign_in_cubit.dart';
-import 'package:capture/features/auth/presentations/sign_up_page.dart';
-import 'package:capture/features/auth/repository/auth_repositry.dart';
 import 'package:capture/helpers/helpers.dart';
 import 'package:capture/main.dart';
 import 'package:capture/services/app_router.dart';
@@ -37,6 +35,10 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        elevation: 0.0,
+      ),
       body: BlocConsumer<SignInCubit, DataState<String>>(
         listener: (_, state) {
           setState(() {
@@ -46,12 +48,11 @@ class _SignInPageState extends State<SignInPage> {
           if (state.status == LoadStatus.success) {
             final data = state.data;
             context.read<AuthCubit>().setAuthenticated(data['token']);
-          } else {
+          } else if (state.status == LoadStatus.failure) {
             String errorMessage = '';
             var exception = state.error;
 
             if (exception?.response != null) {
-              print('error 422');
               if (exception?.response?.statusCode ==
                   HttpStatus.unprocessableEntity) {
                 var stateError = state.error;
@@ -62,11 +63,10 @@ class _SignInPageState extends State<SignInPage> {
                     final Map<String, dynamic> json =
                         jsonDecode(stateError.response.toString());
                     if (json["error"] != null) {
-                      errorEmail = json["error"]["email"] ?? null;
-                      errorPassword = json["error"]["password"] ?? null;
+                      errorEmail = json["error"]["email"];
+                      errorPassword = json["error"]["password"];
                     }
                   }
-
                   setState(() {
                     emailError = errorEmail;
                     passwordError = errorPassword;
@@ -93,7 +93,7 @@ class _SignInPageState extends State<SignInPage> {
             child: Stack(
               children: [
                 Container(
-                  padding: const EdgeInsets.only(left: 24, right: 24, top: 100),
+                  margin: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
                     children: [
                       Expanded(
@@ -179,11 +179,11 @@ class _SignInPageState extends State<SignInPage> {
                               text: "Login",
                               verticalPadding: 25,
                               onPressed: () {
-                                // if (_formKey.currentState!.validate()) {
-                                context.read<SignInCubit>().signIn(
-                                    _emailController.text,
-                                    _passwordController.text);
-                                // }
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<SignInCubit>().signIn(
+                                      _emailController.text,
+                                      _passwordController.text);
+                                }
                               },
                             ),
                             const SizedBox(height: 16),

@@ -123,6 +123,15 @@ class _MainAppState extends State<MainApp> {
           primaryContainer: const Color(0x3348B5D6),
           onSurfaceVariant: Colors.grey,
         ),
+        dialogTheme: DialogTheme(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16),
+            ),
+          ),
+        ),
         // appBarTheme: const AppBarTheme(
         //   backgroundColor: Color(0xFF304AAC),
         //   surfaceTintColor: Color(0xFF304AAC),

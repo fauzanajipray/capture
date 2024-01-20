@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
 import 'package:capture/features/auth/cubit/auth_state.dart';
 import 'package:capture/features/auth/cubit/sign_in_cubit.dart';
+import 'package:capture/features/auth/cubit/sign_up_cubit.dart';
 import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
@@ -20,6 +21,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   late final AuthCubit _authCubit;
   static late final GoRouter _router;
+  final AuthRepository _authRepository = AuthRepository();
 
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -133,7 +135,7 @@ class AppRouter {
         pageBuilder: (context, state) {
           return getPage(
             child: BlocProvider<SignInCubit>(
-                create: (context) => SignInCubit(AuthRepository()),
+                create: (context) => SignInCubit(_authRepository),
                 child: const SignInPage()),
             state: state,
           );
@@ -144,7 +146,10 @@ class AppRouter {
         path: Destination.signUpPath,
         pageBuilder: (context, state) {
           return getPage(
-            child: const SignUpPage(),
+            child: BlocProvider<SignUpCubit>(
+              create: (context) => SignUpCubit(_authRepository),
+              child: const SignUpPage(),
+            ),
             state: state,
           );
         },
@@ -172,7 +177,6 @@ class AppRouter {
         ];
 
         if (_authCubit.state.isOnBoard == false) {
-          logger.d('on board : ${_authCubit.state.isOnBoard}');
           return Destination.onBoardPath;
         } else {
           String? subloc = state.fullPath;

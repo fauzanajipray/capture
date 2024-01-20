@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 void showDialogMsg(BuildContext mainContext, String errorMessage,
@@ -53,4 +56,46 @@ void showDialogConfirmationDelete(BuildContext mainContext, Function onDelete,
       );
     },
   );
+}
+
+void showDialogInfo(BuildContext mainContext, Function onYes,
+    {String title = 'Info',
+    String message = 'Success',
+    String errorBtn = 'Ok'}) {
+  showAdaptiveDialog(
+    context: mainContext,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              onYes();
+            },
+            style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.primary),
+            child: Text(errorBtn),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+String extractErrorMessage(dynamic error) {
+  if (error is DioException && error.response != null) {
+    try {
+      final Map<String, dynamic> jsonResponse =
+          jsonDecode(error.response.toString());
+      var errorMessage = jsonResponse["error"];
+      errorMessage ??= jsonResponse["message"];
+      return errorMessage ?? "An error occurred";
+    } catch (e) {
+      return "An error occurred";
+    }
+  } else {
+    return "An error occurred";
+  }
 }
