@@ -41,11 +41,6 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         foregroundColor: Theme.of(context).colorScheme.onBackground,
         elevation: 0.0,
-
-        // nameError = json["error"]["name"];
-        // emailError = json["error"]["email"];
-        // passwordError = json["error"]["password"];
-        // passwordConfirmError = json['error']["confirm_password"];
       ),
       body: BlocConsumer<SignUpCubit, DataState<String>>(
         listener: (_, state) {
@@ -223,13 +218,13 @@ class _SignUpPageState extends State<SignUpPage> {
                               text: "Submit",
                               verticalPadding: 25,
                               onPressed: () {
-                                // if (_formKey.currentState!.validate()) {
-                                context.read<SignUpCubit>().signUp(
-                                    _nameController.text,
-                                    _emailController.text,
-                                    _passwordController.text,
-                                    _passwordConfirmController.text);
-                                // }
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<SignUpCubit>().signUp(
+                                      _nameController.text,
+                                      _emailController.text,
+                                      _passwordController.text,
+                                      _passwordConfirmController.text);
+                                }
                               },
                             ),
                             const SizedBox(height: 16),

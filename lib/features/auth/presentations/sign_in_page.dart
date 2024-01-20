@@ -51,38 +51,24 @@ class _SignInPageState extends State<SignInPage> {
           } else if (state.status == LoadStatus.failure) {
             String errorMessage = '';
             var exception = state.error;
-
             if (exception?.response != null) {
               if (exception?.response?.statusCode ==
                   HttpStatus.unprocessableEntity) {
-                var stateError = state.error;
-                if (stateError != null) {
-                  String? errorEmail;
-                  String? errorPassword;
-                  if (stateError.response != null) {
-                    final Map<String, dynamic> json =
-                        jsonDecode(stateError.response.toString());
-                    if (json["error"] != null) {
-                      errorEmail = json["error"]["email"];
-                      errorPassword = json["error"]["password"];
-                    }
-                  }
-                  setState(() {
-                    emailError = errorEmail;
-                    passwordError = errorPassword;
-                  });
-                } else {
-                  showDialogMsg(context, 'Something went wrong!');
-                }
+                final Map<String, dynamic> json =
+                    jsonDecode(exception!.response.toString());
+                setState(() {
+                  emailError = json["error"]["email"];
+                  passwordError = json["error"]["password"];
+                });
               } else {
-                logger.d(exception?.response?.statusCode);
+                errorMessage = extractErrorMessage(exception);
+                showDialogMsg(context, errorMessage);
               }
             } else {
-              if (DioExceptionType.connectionError == exception?.type) {
-                errorMessage = "Connection Error";
-              } else {
-                errorMessage = "Something went wrong!";
-              }
+              errorMessage =
+                  (DioExceptionType.connectionError == exception?.type)
+                      ? "Connection Error"
+                      : "Something went wrong!";
               showDialogMsg(context, errorMessage);
             }
           }
