@@ -19,9 +19,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     FlutterStatusbarcolor.setStatusBarColor(
         Theme.of(context).colorScheme.primary);
     return Scaffold(
-      body: SafeArea(
-        child: widget.child,
-      ),
+      body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: widget.child.currentIndex,

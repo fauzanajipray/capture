@@ -27,7 +27,9 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: BlocConsumer<SignInCubit, DataState<String>>(
         listener: (_, state) {
           if (state.status == LoadStatus.success) {

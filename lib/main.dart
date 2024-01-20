@@ -123,12 +123,12 @@ class _MainAppState extends State<MainApp> {
           primaryContainer: const Color(0x3348B5D6),
           onSurfaceVariant: Colors.grey,
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF304AAC),
-          surfaceTintColor: Color(0xFF304AAC),
-          foregroundColor: Colors.white,
-        ),
-        useMaterial3: true,
+        // appBarTheme: const AppBarTheme(
+        //   backgroundColor: Color(0xFF304AAC),
+        //   surfaceTintColor: Color(0xFF304AAC),
+        //   foregroundColor: Colors.white,
+        // ),
+        useMaterial3: false,
       ),
     );
   }
