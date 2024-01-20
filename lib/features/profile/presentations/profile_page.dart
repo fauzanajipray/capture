@@ -1,8 +1,11 @@
+import 'package:capture/features/auth/cubit/auth_cubit.dart';
+import 'package:capture/helpers/helpers.dart';
 import 'package:capture/widgets/my_button.dart';
 import 'package:capture/widgets/my_text_field.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -214,7 +217,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 120,
                   height: 43,
                   child: MyButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialogConfirmationDelete(
+                        context,
+                        () => context.read<AuthCubit>().setUnauthenticated(),
+                        message: 'Are you sure you want to log out?',
+                        errorBtn: 'Confirm',
+                      );
+                    },
                     text: 'Logout',
                     verticalPadding: 10,
                   ),

@@ -1,4 +1,5 @@
 import 'package:capture/features/auth/repository/auth_repositry.dart';
+import 'package:capture/main.dart';
 import 'package:capture/utils/data_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:dio/dio.dart';
@@ -11,13 +12,11 @@ class SignInCubit extends Cubit<DataState<String>> {
   Future<void> signIn(String email, String password) async {
     emit(state.copyWith(status: LoadStatus.loading));
     try {
-      // Add delay 2 second
-      await Future.delayed(const Duration(seconds: 2));
-      // Map<String, dynamic> response =
-      // await _authRepository.signIn(email, password);
-      // emit(state.copyWith(
-      //     status: LoadStatus.success, data: response, error: null));
-      emit(state.copyWith(status: LoadStatus.success, error: null));
+      Map<String, dynamic> response =
+          await _authRepository.signIn(email, password);
+      logger.d("$email - $password");
+      emit(state.copyWith(
+          status: LoadStatus.success, data: response, error: null));
     } on DioException catch (e) {
       emit(state.copyWith(status: LoadStatus.failure, error: e));
     }

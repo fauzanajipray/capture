@@ -2,7 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstant {
   static String get baseUrl =>
-      '${dotenv.env['BASE_URL'] ?? "http://192.168.3.216:8100"}/';
+      '${dotenv.env['BASE_URL'] ?? "http://192.168.3.216:8100"}/api/';
 
   static const int apiReceiveTimeout = 15000;
   static const int apiSendTimeout = 15000;
