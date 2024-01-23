@@ -34,52 +34,47 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        elevation: 0.0,
-      ),
-      body: BlocConsumer<SignInCubit, DataState<String>>(
-        listener: (_, state) {
-          setState(() {
-            emailError = null;
-            passwordError = null;
-          });
-          if (state.status == LoadStatus.success) {
-            final data = state.data;
-            context.read<AuthCubit>().setAuthenticated(data['token']);
-          } else if (state.status == LoadStatus.failure) {
-            String errorMessage = '';
-            var exception = state.error;
-            if (exception?.response != null) {
-              if (exception?.response?.statusCode ==
-                  HttpStatus.unprocessableEntity) {
-                final Map<String, dynamic> json =
-                    jsonDecode(exception!.response.toString());
-                setState(() {
-                  emailError = json["error"]["email"];
-                  passwordError = json["error"]["password"];
-                });
-              } else {
-                errorMessage = extractErrorMessage(exception);
-                showDialogMsg(context, errorMessage);
-              }
+    return BlocConsumer<SignInCubit, DataState<String>>(
+      listener: (_, state) {
+        setState(() {
+          emailError = null;
+          passwordError = null;
+        });
+        if (state.status == LoadStatus.success) {
+          final data = state.data;
+          context.read<AuthCubit>().setAuthenticated(data['token']);
+        } else if (state.status == LoadStatus.failure) {
+          String errorMessage = '';
+          var exception = state.error;
+          if (exception?.response != null) {
+            if (exception?.response?.statusCode ==
+                HttpStatus.unprocessableEntity) {
+              final Map<String, dynamic> json =
+                  jsonDecode(exception!.response.toString());
+              setState(() {
+                emailError = json["error"]["email"];
+                passwordError = json["error"]["password"];
+              });
             } else {
-              errorMessage =
-                  (DioExceptionType.connectionError == exception?.type)
-                      ? "Connection Error"
-                      : "Something went wrong!";
+              errorMessage = extractErrorMessage(exception);
               showDialogMsg(context, errorMessage);
             }
+          } else {
+            errorMessage = (DioExceptionType.connectionError == exception?.type)
+                ? "Connection Error"
+                : "Something went wrong!";
+            showDialogMsg(context, errorMessage);
           }
-        },
-        builder: (contex, state) {
-          return Form(
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: Form(
             key: _formKey,
             child: Stack(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 24, right: 24),
+                  margin: const EdgeInsets.only(left: 24, right: 24, top: 80),
                   child: Column(
                     children: [
                       Expanded(
@@ -315,9 +310,9 @@ class _SignInPageState extends State<SignInPage> {
                 if (state.status == LoadStatus.loading) const LoadingProgress(),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

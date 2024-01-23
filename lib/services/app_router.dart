@@ -8,11 +8,12 @@ import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
 import 'package:capture/features/history/presentations/history_page.dart';
+import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
+import 'package:capture/features/home/repository/home_repository.dart';
 import 'package:capture/features/notification/presentations/notification_page.dart';
 import 'package:capture/features/profile/presentations/profile_page.dart';
 import 'package:capture/features/starter/presentations/onboard_page.dart';
-import 'package:capture/main.dart';
 import 'package:capture/widgets/bottom_navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,9 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   late final AuthCubit _authCubit;
   static late final GoRouter _router;
+
   final AuthRepository _authRepository = AuthRepository();
+  final HomeRepository _homeRepository = HomeRepository();
 
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -46,7 +49,11 @@ class AppRouter {
                 path: Destination.homePath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const HomePage(),
+                    child: MultiBlocProvider(providers: [
+                      BlocProvider(
+                        create: (_) => CategoryCubit(_homeRepository),
+                      ),
+                    ], child: const HomePage()),
                     state: state,
                   );
                 },
