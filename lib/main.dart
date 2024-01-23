@@ -17,6 +17,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:responsive_framework/breakpoint.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:logger/logger.dart';
 
 Logger logger = Logger(printer: PrettyPrinter());
@@ -77,7 +78,19 @@ class _MainAppState extends State<MainApp> {
       providers: [
         BlocProvider(create: (context) => _authCubit),
       ],
-      child: buildMaterialApp(),
+      child: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.token == '') {
+            FlutterStatusbarcolor.setStatusBarColor(
+                Theme.of(context).colorScheme.background);
+          } else {
+            FlutterStatusbarcolor.setStatusBarColor(const Color(0xFF304AAC));
+          }
+        },
+        builder: (context, state) {
+          return buildMaterialApp();
+        },
+      ),
     );
   }
 
@@ -94,6 +107,7 @@ class _MainAppState extends State<MainApp> {
           },
           builder: (BuildContext context, AuthState state) {
             FlutterNativeSplash.remove();
+            logger.d('$state');
             if (state.status == AuthStatus.initial ||
                 state.status == AuthStatus.loading) {
               return const Scaffold(
