@@ -1,3 +1,4 @@
+import 'package:capture/constant/app.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/models/category.dart';
 import 'package:capture/utils/load_status.dart';
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(70.0),
                                 child: Image.network(
-                                  "https://via.placeholder.com/70x70",
+                                  '${AppConstant.baseUrlImage}/logo/${item.logo}',
                                   width: 70,
                                   height: 70,
                                   fit: BoxFit.fill,
@@ -153,7 +154,7 @@ class _HomePageState extends State<HomePage> {
 class RoundedImage extends StatelessWidget {
   final String imageUrl;
 
-  const RoundedImage({required this.imageUrl});
+  const RoundedImage({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +165,8 @@ class RoundedImage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(70),
         boxShadow: [
-          BoxShadow(
-            color: Color(0x66E5E5E5),
+          const BoxShadow(
+            color: const Color(0x66E5E5E5),
             blurRadius: 4,
             offset: Offset(0, 4),
             spreadRadius: 0,

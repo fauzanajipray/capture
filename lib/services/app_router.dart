@@ -12,7 +12,10 @@ import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
 import 'package:capture/features/notification/presentations/notification_page.dart';
+import 'package:capture/features/profile/cubit/profile_cubit.dart';
+import 'package:capture/features/profile/cubit/profile_update_cubit.dart';
 import 'package:capture/features/profile/presentations/profile_page.dart';
+import 'package:capture/features/profile/repository/profile_repository.dart';
 import 'package:capture/features/starter/presentations/onboard_page.dart';
 import 'package:capture/widgets/bottom_navigation_page.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +28,7 @@ class AppRouter {
 
   final AuthRepository _authRepository = AuthRepository();
   final HomeRepository _homeRepository = HomeRepository();
+  final ProfileRepository _profileRepository = ProfileRepository();
 
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -95,7 +99,17 @@ class AppRouter {
                 path: Destination.profilePath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const ProfilePage(),
+                    child: MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (_) => ProfileCubit(_profileRepository),
+                        ),
+                        BlocProvider(
+                          create: (_) => ProfileUpdateCubit(_profileRepository),
+                        ),
+                      ],
+                      child: const ProfilePage(),
+                    ),
                     state: state,
                   );
                 },
