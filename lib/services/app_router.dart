@@ -8,6 +8,7 @@ import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
 import 'package:capture/features/history/presentations/history_page.dart';
+import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
@@ -56,6 +57,9 @@ class AppRouter {
                     child: MultiBlocProvider(providers: [
                       BlocProvider(
                         create: (_) => CategoryCubit(_homeRepository),
+                      ),
+                      BlocProvider(
+                        create: (_) => RecomendationBloc(_homeRepository),
                       ),
                     ], child: const HomePage()),
                     state: state,

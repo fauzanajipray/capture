@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void showDialogMsg(BuildContext mainContext, String errorMessage,
     {String title = 'Error'}) {
@@ -56,6 +57,20 @@ void showDialogConfirmationDelete(BuildContext mainContext, Function onDelete,
       );
     },
   );
+}
+
+String formatCurrency(dynamic number) {
+  if (number is int) {
+    return NumberFormat().format(number).replaceAll(',', '.');
+  } else if (number is double) {
+    return NumberFormat()
+        .format(number)
+        .replaceAll(',', 'X')
+        .replaceAll('.', ',')
+        .replaceAll('X', '.');
+  } else {
+    return '0';
+  }
 }
 
 void showDialogInfo(BuildContext mainContext, Function onYes,

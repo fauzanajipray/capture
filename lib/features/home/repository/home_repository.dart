@@ -13,4 +13,14 @@ class HomeRepository {
     Response response = await _dio.get('/categories');
     return response.data;
   }
+
+  // Get Recomendation
+  Future<Map<String, dynamic>> getRecomendation(int page) async {
+    final queryParameters = {
+      'page': page.toString(),
+    };
+    Response response = await _dio.get('/merchant/recomendation',
+        queryParameters: queryParameters);
+    return response.data;
+  }
 }

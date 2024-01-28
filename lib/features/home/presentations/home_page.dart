@@ -1,10 +1,20 @@
 import 'package:capture/constant/app.dart';
+import 'package:capture/features/home/bloc/recomendation_bloc.dart';
+import 'package:capture/features/home/bloc/recomendation_event.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/models/category.dart';
+import 'package:capture/features/home/models/recomendation.dart';
+import 'package:capture/helpers/helpers.dart';
+import 'package:capture/main.dart';
+import 'package:capture/services/app_router.dart';
+import 'package:capture/utils/data_list_state.dart';
 import 'package:capture/utils/load_status.dart';
+import 'package:capture/utils/my_paged_list_view.dart';
 import 'package:capture/widgets/error_data.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,9 +28,28 @@ class _HomePageState extends State<HomePage> {
 
   late final CategoryCubit _categoryCubit;
 
+  late final RecomendationBloc _blocRecomendation;
+  final PagingController<int, Recomendation> _pagingController =
+      PagingController(firstPageKey: 1);
+
   @override
   void initState() {
     _categoryCubit = context.read<CategoryCubit>();
+    _blocRecomendation = context.read<RecomendationBloc>();
+    _pagingController.addPageRequestListener((pageKey) {
+      _blocRecomendation.add(FetchItemEvent(pageKey));
+    });
+    _blocRecomendation.stream.listen((event) {
+      if (event.status == LoadStatus.success) {
+        _pagingController.value = PagingState(
+          nextPageKey: event.nextPageKey,
+          itemList: event.itemList,
+          error: null,
+        );
+      } else if (event.status == LoadStatus.failure) {
+        _pagingController.error = event.error;
+      }
+    });
     initAsyncData();
     super.initState();
   }
@@ -36,6 +65,7 @@ class _HomePageState extends State<HomePage> {
         onRefresh: () => Future.sync(
           () {
             initAsyncData();
+            _blocRecomendation.add(ResetPage());
           },
         ),
         child: CustomScrollView(
@@ -71,7 +101,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.only(left: 8, top: 16),
+                padding: const EdgeInsets.only(left: 16, top: 16),
                 child: const Text(
                   'Kategori',
                   textAlign: TextAlign.left,
@@ -85,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.only(left: 8, top: 16),
+                margin: const EdgeInsets.only(left: 16, top: 16),
                 height: 70,
                 child: BlocBuilder<CategoryCubit, CategoryState>(
                   builder: (context, state) {
@@ -132,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.only(left: 8, top: 16),
+                padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
                 child: const Text(
                   'Rekomendasi',
                   textAlign: TextAlign.left,
@@ -143,6 +173,97 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+            ),
+            BlocConsumer<RecomendationBloc, DataListState<Recomendation>>(
+              listener: (context, state) {
+                if (state.status == LoadStatus.reset) {
+                  _blocRecomendation.add(FetchItemEvent(1));
+                }
+              },
+              builder: (context, state) {
+                logger.d(state.status);
+                if (state.status == LoadStatus.loading) {
+                  return const SliverToBoxAdapter(
+                      child: Center(child: CircularProgressIndicator()));
+                } else {
+                  return MyPagedListView<Recomendation>(
+                    pagingController: _pagingController,
+                    isSliver: true,
+                    itemBuilder: (context, item, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  // Tindakan saat diketuk
+                                },
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Container(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        width: 145.0,
+                                        height: 90.0,
+                                        child: Image.network(
+                                          '${AppConstant.baseUrlImage}/logo/${item.logo}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListTile(
+                                        title: Text(
+                                          '${item.namaMerchant}',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontFamily: 'Lato',
+                                            fontWeight: FontWeight.w600,
+                                            height: 0.08,
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Rp ${formatCurrency(item.totalHargaPackageMerchant ?? 0)}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 13,
+                                                fontFamily: 'Lato',
+                                                fontWeight: FontWeight.w500,
+                                                height: 0.13,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.0),
+                              child: Divider(height: 1),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
+                // return Text('data');
+              },
             )
           ],
         ),
