@@ -8,9 +8,12 @@ import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
 import 'package:capture/features/history/presentations/history_page.dart';
+import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
+import 'package:capture/features/home/presentations/product_page.dart';
+import 'package:capture/features/home/presentations/search_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
 import 'package:capture/features/notification/presentations/notification_page.dart';
 import 'package:capture/features/profile/cubit/profile_cubit.dart';
@@ -60,6 +63,9 @@ class AppRouter {
                       ),
                       BlocProvider(
                         create: (_) => RecomendationBloc(_homeRepository),
+                      ),
+                      BlocProvider(
+                        create: (_) => ProductSearchBloc(_homeRepository),
                       ),
                     ], child: const HomePage()),
                     state: state,
@@ -179,6 +185,33 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.productDetail,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: BlocProvider<SignUpCubit>(
+              create: (context) => SignUpCubit(_authRepository),
+              child: const ProductPage(),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.searchPath,
+        pageBuilder: (context, state) {
+          String? searchKey = state.pathParameters['key'];
+          return getPage(
+            child: BlocProvider<ProductSearchBloc>(
+              create: (context) => ProductSearchBloc(_homeRepository),
+              child: SearchPage(searchKey),
+            ),
+            state: state,
+          );
+        },
+      ),
     ];
 
     _router = GoRouter(
@@ -242,9 +275,11 @@ class Destination {
 
   // Need Auth
   static const String homePath = '/home';
+  static const String productDetail = '/productDetail';
   static const String historyPath = '/history';
   static const String notifPath = '/notif';
   static const String profilePath = '/profile';
+  static const String searchPath = '/search/:key';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {

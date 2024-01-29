@@ -3,7 +3,7 @@ import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_event.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/models/category.dart';
-import 'package:capture/features/home/models/recomendation.dart';
+import 'package:capture/features/home/models/product.dart';
 import 'package:capture/helpers/helpers.dart';
 import 'package:capture/main.dart';
 import 'package:capture/services/app_router.dart';
@@ -11,9 +11,9 @@ import 'package:capture/utils/data_list_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:capture/utils/my_paged_list_view.dart';
 import 'package:capture/widgets/error_data.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,13 +24,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController _searchController = TextEditingController();
-
+  final TextEditingController _searchController = TextEditingController();
   late final CategoryCubit _categoryCubit;
-
   late final RecomendationBloc _blocRecomendation;
-  final PagingController<int, Recomendation> _pagingController =
+  final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 1);
+
+  String searchText = '';
 
   @override
   void initState() {
@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     child: TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 15.0),
@@ -94,6 +95,19 @@ class _HomePageState extends State<HomePage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchText = value;
+                        });
+                      },
+                      onEditingComplete: () {
+                        context.push(Destination.searchPath
+                            .replaceAll(':key', searchText));
+                        setState(() {
+                          searchText = '';
+                          _searchController.text = '';
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -174,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            BlocConsumer<RecomendationBloc, DataListState<Recomendation>>(
+            BlocConsumer<RecomendationBloc, DataListState<Product>>(
               listener: (context, state) {
                 if (state.status == LoadStatus.reset) {
                   _blocRecomendation.add(FetchItemEvent(1));
@@ -186,79 +200,11 @@ class _HomePageState extends State<HomePage> {
                   return const SliverToBoxAdapter(
                       child: Center(child: CircularProgressIndicator()));
                 } else {
-                  return MyPagedListView<Recomendation>(
+                  return MyPagedListView<Product>(
                     pagingController: _pagingController,
                     isSliver: true,
                     itemBuilder: (context, item, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  // Tindakan saat diketuk
-                                },
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Container(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        width: 145.0,
-                                        height: 90.0,
-                                        child: Image.network(
-                                          '${AppConstant.baseUrlImage}/logo/${item.logo}',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ListTile(
-                                        title: Text(
-                                          '${item.namaMerchant}',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontFamily: 'Lato',
-                                            fontWeight: FontWeight.w600,
-                                            height: 0.08,
-                                          ),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Rp ${formatCurrency(item.totalHargaPackageMerchant ?? 0)}',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 13,
-                                                fontFamily: 'Lato',
-                                                fontWeight: FontWeight.w500,
-                                                height: 0.13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12.0),
-                              child: Divider(height: 1),
-                            )
-                          ],
-                        ),
-                      );
+                      return ProductCard(item, null);
                     },
                   );
                 }
@@ -267,6 +213,87 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  const ProductCard(this.item, this.margin, {super.key});
+  final Product item;
+  final EdgeInsetsGeometry? margin;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: (margin != null)
+          ? margin
+          : const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: InkWell(
+              onTap: () {
+                context.push(Destination.productDetail);
+              },
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Container(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 145.0,
+                      height: 90.0,
+                      child: Image.network(
+                        '${AppConstant.baseUrlImage}/logo/${item.logo}',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(child: Text('Error'));
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      title: Text(
+                        '${item.namaMerchant}',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.w600,
+                          height: 0.08,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Rp ${formatCurrency(item.totalHargaPackageMerchant ?? 0)}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontFamily: 'Lato',
+                              fontWeight: FontWeight.w500,
+                              height: 0.13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Divider(height: 1),
+          )
+        ],
       ),
     );
   }
@@ -285,9 +312,9 @@ class RoundedImage extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(70),
-        boxShadow: [
-          const BoxShadow(
-            color: const Color(0x66E5E5E5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x66E5E5E5),
             blurRadius: 4,
             offset: Offset(0, 4),
             spreadRadius: 0,

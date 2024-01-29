@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Recomendation {
+class Product {
   String? idMerchant;
   String? idKategori;
   String? namaMerchant;
@@ -13,7 +13,7 @@ class Recomendation {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Recomendation({
+  Product({
     this.idMerchant,
     this.idKategori,
     this.namaMerchant,
@@ -27,7 +27,7 @@ class Recomendation {
     this.updatedAt,
   });
 
-  Recomendation copyWith({
+  Product copyWith({
     String? idMerchant,
     String? idKategori,
     String? namaMerchant,
@@ -40,7 +40,7 @@ class Recomendation {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>
-      Recomendation(
+      Product(
         idMerchant: idMerchant ?? this.idMerchant,
         idKategori: idKategori ?? this.idKategori,
         namaMerchant: namaMerchant ?? this.namaMerchant,
@@ -55,12 +55,11 @@ class Recomendation {
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
-  factory Recomendation.fromRawJson(String str) =>
-      Recomendation.fromJson(json.decode(str));
+  factory Product.fromRawJson(String str) => Product.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Recomendation.fromJson(Map<String, dynamic> json) => Recomendation(
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
         idMerchant: json["id_merchant"],
         idKategori: json["id_kategori"],
         namaMerchant: json["nama_merchant"],

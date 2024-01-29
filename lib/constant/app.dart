@@ -7,6 +7,8 @@ class AppConstant {
   static String get baseUrlImage =>
       '${dotenv.env['BASE_URL'] ?? "http://192.168.3.216:8100"}/assets/images/';
 
+  static String get midtransKey => dotenv.env['MIDTRANS_CLIENT_KEY'] ?? '';
+
   static const int apiReceiveTimeout = 15000;
   static const int apiSendTimeout = 15000;
   static const int apiConnectionTimeout = 30000;

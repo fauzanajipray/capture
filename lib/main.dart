@@ -107,7 +107,6 @@ class _MainAppState extends State<MainApp> {
           },
           builder: (BuildContext context, AuthState state) {
             FlutterNativeSplash.remove();
-            logger.d('$state');
             if (state.status == AuthStatus.initial ||
                 state.status == AuthStatus.loading) {
               return const Scaffold(

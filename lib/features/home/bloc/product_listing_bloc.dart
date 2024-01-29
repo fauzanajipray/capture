@@ -1,21 +1,23 @@
-import 'package:capture/features/home/bloc/recomendation_event.dart';
+import 'package:capture/features/home/bloc/product_listing_event.dart';
+import 'package:capture/features/home/bloc/product_listing_state.dart';
 import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
-import 'package:capture/utils/data_list_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:dio/dio.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RecomendationBloc
-    extends Bloc<RecomendationEvent, DataListState<Product>> {
-  RecomendationBloc(this.repository) : super(const DataListState()) {
-    on<RecomendationEvent>(
+class ProductSearchBloc extends Bloc<ProductListingEvent, ProductListingState> {
+  ProductSearchBloc(this.repository) : super(const ProductListingState()) {
+    on<ProductListingEvent>(
       (event, emit) async {
         if (event is ResetSearchTermEvent) {
-          emit(_resetSearching());
+          emit(_resetSearching(event.search, event.categoryId));
         } else if (event is FetchItemEvent) {
-          DataListState<Product> stateData =
-              await fetchProductList(event.pageKey, state.search);
+          ProductListingState stateData = await fetchProductList(
+            event.pageKey,
+            search: event.search ?? state.search,
+            categoryId: state.categoryId,
+          );
           emit(stateData);
         } else if (event is ResetPage) {
           emit(_resetPage());
@@ -27,18 +29,24 @@ class RecomendationBloc
   static const _pageSize = 20;
   final HomeRepository repository;
 
-  DataListState<Product> _resetSearching() {
+  ProductListingState _resetSearching(String? search, int? categoryId) {
     return state.copyWith(
-      status: LoadStatus.reset,
-    );
+        status: LoadStatus.reset,
+        search: search,
+        categoryId: (categoryId != null) ? '$categoryId' : '');
   }
 
-  Future<DataListState<Product>> fetchProductList(int pageKey,
-      [String? search, String? categoryId]) async {
+  Future<ProductListingState> fetchProductList(
+    int pageKey, {
+    String? search,
+    String? categoryId,
+  }) async {
     final lastListingState = state.copyWith(status: LoadStatus.loading);
     try {
-      final response = await repository.getRecomendation(
+      final response = await repository.getProductList(
         pageKey,
+        categoryId,
+        search,
       );
       var data = response['data'] as List;
 
@@ -73,7 +81,7 @@ class RecomendationBloc
     }
   }
 
-  DataListState<Product> _resetPage() {
+  ProductListingState _resetPage() {
     return state.copyWith(status: LoadStatus.reset, page: 1);
   }
 }

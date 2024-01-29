@@ -23,4 +23,19 @@ class HomeRepository {
         queryParameters: queryParameters);
     return response.data;
   }
+
+  Future<Map<String, dynamic>> getProductList(
+    int page,
+    String? categoryId,
+    String? search,
+  ) async {
+    final queryParameters = {
+      'page': page.toString(),
+      'category_id': categoryId ?? '',
+      'name': search ?? ''
+    };
+    Response response =
+        await _dio.get('/merchant', queryParameters: queryParameters);
+    return response.data;
+  }
 }
