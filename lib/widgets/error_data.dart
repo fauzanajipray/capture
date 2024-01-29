@@ -14,16 +14,18 @@ Widget errorData(BuildContext context, DioException? error,
       defaultMessage ?? 'Failed to process data from server. Please try again.';
   if (exception != null) {
     message = DioExceptions.fromDioError(exception, context).toString();
-    if (with422) {
-      Map<String, List<String>>? mappedMessage =
-          DioExceptions.fromDioError422(exception, context).mappedMessage;
-      // String finalMessage = concatAllMappedMessage(mappedMessage);
-      String finalMessage = '$mappedMessage';
-      if (finalMessage.isNotEmpty) {
-        if (error422 != null) {
-          message = error422;
-        } else {
-          message = finalMessage;
+    if (exception.type != DioExceptionType.connectionTimeout) {
+      if (with422) {
+        Map<String, List<String>>? mappedMessage =
+            DioExceptions.fromDioError422(exception, context).mappedMessage;
+        // String finalMessage = concatAllMappedMessage(mappedMessage);
+        String finalMessage = '$mappedMessage';
+        if (finalMessage.isNotEmpty) {
+          if (error422 != null) {
+            message = error422;
+          } else {
+            message = finalMessage;
+          }
         }
       }
     }

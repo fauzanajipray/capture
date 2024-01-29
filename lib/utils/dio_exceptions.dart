@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:capture/main.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,6 +17,7 @@ class DioExceptions implements Exception {
     //   message = AppLocalizations.of(context)!.server_error;
     //   return;
     // }
+    logger.d(dioError.type);
     switch (dioError.type) {
       case DioExceptionType.cancel:
         message = "";

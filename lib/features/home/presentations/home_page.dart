@@ -244,7 +244,7 @@ class ProductCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Container(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Colors.transparent, //
                       width: 145.0,
                       height: 90.0,
                       child: Image.network(
@@ -289,10 +289,6 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
-            child: Divider(height: 1),
-          )
         ],
       ),
     );
