@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
 import 'package:capture/features/auth/cubit/sign_in_cubit.dart';
 import 'package:capture/helpers/helpers.dart';
-import 'package:capture/main.dart';
 import 'package:capture/services/app_router.dart';
 import 'package:capture/utils/data_state.dart';
 import 'package:capture/utils/load_status.dart';

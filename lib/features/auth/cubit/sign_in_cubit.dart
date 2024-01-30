@@ -1,5 +1,4 @@
 import 'package:capture/features/auth/repository/auth_repositry.dart';
-import 'package:capture/main.dart';
 import 'package:capture/utils/data_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:dio/dio.dart';

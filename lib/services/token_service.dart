@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:capture/features/home/models/token_model.dart';
-import 'package:capture/main.dart';
 import 'package:capture/services/dio_client.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -16,7 +15,6 @@ class TokenService {
 
   Future<Either<Failure, TokenModel>> getToken() async {
     var apiUrl = dotenv.env['BASE_URL'] ?? '';
-    logger.d(apiUrl);
 
     // Payload
     var payload = {

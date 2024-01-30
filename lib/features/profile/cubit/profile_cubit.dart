@@ -1,6 +1,5 @@
 import 'package:capture/features/profile/models/profile.dart';
 import 'package:capture/features/profile/repository/profile_repository.dart';
-import 'package:capture/main.dart';
 import 'package:capture/utils/data_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:dio/dio.dart';

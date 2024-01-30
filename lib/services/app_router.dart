@@ -23,6 +23,7 @@ import 'package:capture/features/profile/cubit/profile_update_cubit.dart';
 import 'package:capture/features/profile/presentations/profile_page.dart';
 import 'package:capture/features/profile/repository/profile_repository.dart';
 import 'package:capture/features/starter/presentations/onboard_page.dart';
+import 'package:capture/features/transaction/cubit/callback_payment_cubit.dart';
 import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart';
 import 'package:capture/features/transaction/model/snap_create.dart';
 import 'package:capture/features/transaction/presentations/payment_page.dart';
@@ -226,6 +227,9 @@ class AppRouter {
                   create: (_) =>
                       CreateTransactionCubit(TransactionRepository()),
                 ),
+                BlocProvider(
+                  create: (_) => CallbackPaymentCubit(TransactionRepository()),
+                ),
               ],
               child: PaymentPage(datas.token ?? '', datas.product),
             ),
@@ -332,6 +336,7 @@ class Destination {
   static const String searchPath = '/search/:key';
   static const String paymentPath = '/payment';
   static const String categoryProductPath = '/search/category/:id';
+  static const String snapPath = '/snap';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {

@@ -73,6 +73,10 @@ String formatCurrency(dynamic number) {
   }
 }
 
+String capitalize(String text) {
+  return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
+}
+
 void showDialogInfo(BuildContext mainContext, Function onYes,
     {String title = 'Info',
     String message = 'Success',

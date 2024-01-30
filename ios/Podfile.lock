@@ -4,15 +4,36 @@ PODS:
     - Flutter
   - flutter_statusbarcolor_ns (0.0.1):
     - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - midtrans_sdk (0.3.4):
+    - Flutter
+    - MidtransKit (= 1.20.1)
+  - MidtransCoreKit (1.20.1)
+  - MidtransKit (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
+    - MidtransKit/UI (= 1.20.1)
+  - MidtransKit/UI (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - Toast (4.0.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_statusbarcolor_ns (from `.symlinks/plugins/flutter_statusbarcolor_ns/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - midtrans_sdk (from `.symlinks/plugins/midtrans_sdk/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - MidtransCoreKit
+    - MidtransKit
+    - Toast
 
 EXTERNAL SOURCES:
   Flutter:
@@ -21,6 +42,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_statusbarcolor_ns:
     :path: ".symlinks/plugins/flutter_statusbarcolor_ns/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  midtrans_sdk:
+    :path: ".symlinks/plugins/midtrans_sdk/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
@@ -28,7 +53,12 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_statusbarcolor_ns: 68a360889d88d7915ae524e422aeab62e4063804
+  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
+  midtrans_sdk: 86c6620e0ea827c1000b8898375b52698348ff6c
+  MidtransCoreKit: 2503bd419c78445c59360b81afc2733dee226c8c
+  MidtransKit: f230a539a9b57bd314a91d78044ceee95fb76751
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 

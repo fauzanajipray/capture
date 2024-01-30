@@ -83,13 +83,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 context.push(Destination.productDetailPath
                     .replaceAll(':id', "${widget.id}"));
                 logger.d(stateCreate.item?.token);
-                context.push(
-                  Destination.paymentPath,
-                  extra: SnapPayment(
-                    token: stateCreate.item?.token,
-                    product: Product(),
-                  ).toRawJson(),
-                );
+                context.push(Destination.paymentPath,
+                    extra: SnapPayment(
+                      token: stateCreate.item?.token,
+                      product: _request,
+                    ).toRawJson());
               } else if (stateCreate.status == LoadStatus.failure) {
                 DioExceptions e =
                     DioExceptions.fromDioError(stateCreate.error!, context);

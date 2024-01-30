@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capture/features/home/models/product.dart';
+import 'package:capture/features/home/models/product_detail.dart';
 
 class SnapCreate {
   String? token;
@@ -32,7 +33,7 @@ class SnapCreate {
 
 class SnapPayment {
   String? token;
-  Product? product;
+  ProductDetail? product;
 
   SnapPayment({
     this.token,
@@ -41,7 +42,7 @@ class SnapPayment {
 
   SnapPayment copyWith({
     String? token,
-    Product? product,
+    ProductDetail? product,
   }) =>
       SnapPayment(
         token: token ?? this.token,
@@ -55,7 +56,7 @@ class SnapPayment {
 
   factory SnapPayment.fromJson(Map<String, dynamic> json) => SnapPayment(
         token: json["token"],
-        product: Product.fromJson(json["product"]),
+        product: ProductDetail.fromJson(json["product"]),
       );
 
   Map<String, dynamic> toJson() => {
