@@ -1,21 +1,20 @@
+import 'package:capture/features/history/model/history.dart';
 import 'package:capture/features/home/bloc/list_pagination_event.dart';
-import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
 import 'package:capture/utils/data_list_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:dio/dio.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class RecomendationBloc
-    extends Bloc<ListPaginationEvent, DataListState<Product>> {
-  RecomendationBloc(this.repository) : super(const DataListState()) {
+class HistoryBloc extends Bloc<ListPaginationEvent, DataListState<History>> {
+  HistoryBloc(this.repository) : super(const DataListState()) {
     on<ListPaginationEvent>(
       (event, emit) async {
         if (event is ResetSearchTermEvent) {
           emit(_resetSearching());
         } else if (event is FetchItemEvent) {
-          DataListState<Product> stateData =
-              await fetchProductList(event.pageKey, state.search);
+          DataListState<History> stateData =
+              await fetchHistoryList(event.pageKey);
           emit(stateData);
         } else if (event is ResetPage) {
           emit(_resetPage());
@@ -27,26 +26,25 @@ class RecomendationBloc
   static const _pageSize = 20;
   final HomeRepository repository;
 
-  DataListState<Product> _resetSearching() {
+  DataListState<History> _resetSearching() {
     return state.copyWith(
       status: LoadStatus.reset,
     );
   }
 
-  Future<DataListState<Product>> fetchProductList(int pageKey,
-      [String? search, String? categoryId]) async {
+  Future<DataListState<History>> fetchHistoryList(int pageKey) async {
     final lastListingState = state.copyWith(status: LoadStatus.loading);
     try {
-      final response = await repository.getRecomendation(
+      final response = await repository.getHistories(
         pageKey,
       );
       var data = response['data'] as List;
 
-      List<Product> newItems = data.map((x) => Product.fromJson(x)).toList();
+      List<History> newItems = data.map((x) => History.fromJson(x)).toList();
       final isLastPage = newItems.length < _pageSize;
       final nextPageKey = isLastPage ? null : pageKey + 1;
 
-      List<Product> itemListBefore;
+      List<History> itemListBefore;
       if (pageKey == 1) {
         itemListBefore = [];
       } else {
@@ -73,7 +71,7 @@ class RecomendationBloc
     }
   }
 
-  DataListState<Product> _resetPage() {
+  DataListState<History> _resetPage() {
     return state.copyWith(status: LoadStatus.reset, page: 1);
   }
 }

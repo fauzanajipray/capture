@@ -43,4 +43,13 @@ class HomeRepository {
     Response response = await _dio.get('/merchant/$merchantId');
     return response.data;
   }
+
+  Future<Map<String, dynamic>> getHistories(int page) async {
+    final queryParameters = {
+      'page': page.toString(),
+    };
+    Response response =
+        await _dio.get('/historypayment', queryParameters: queryParameters);
+    return response.data;
+  }
 }

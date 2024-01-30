@@ -87,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.grey.shade400), // Set the border color
                 ),
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 suffixIcon: const Padding(
                   padding: EdgeInsets.all(8.0), // Adjust padding as needed
                   child: Icon(Icons.search),

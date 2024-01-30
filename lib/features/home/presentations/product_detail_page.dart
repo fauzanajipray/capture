@@ -1,5 +1,4 @@
 import 'package:capture/features/home/cubit/product_detail_cubit.dart';
-import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/models/product_detail.dart';
 import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart';
 import 'package:capture/features/transaction/model/snap_create.dart';

@@ -77,6 +77,16 @@ String capitalize(String text) {
   return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
 }
 
+String formatDateTimeCustom(DateTime? dateTime,
+    {String format = 'dd-MMM-yyyy, HH:mm', String ifnull = '-'}) {
+  if (dateTime == null) {
+    return ifnull;
+  } else {
+    final DateFormat formatter = DateFormat(format, 'id_ID');
+    return formatter.format(dateTime);
+  }
+}
+
 void showDialogInfo(BuildContext mainContext, Function onYes,
     {String title = 'Info',
     String message = 'Success',

@@ -1,6 +1,6 @@
 import 'package:capture/constant/app.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
-import 'package:capture/features/home/bloc/recomendation_event.dart';
+import 'package:capture/features/home/bloc/list_pagination_event.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/models/category.dart';
 import 'package:capture/features/home/models/product.dart';

@@ -7,6 +7,7 @@ import 'package:capture/features/auth/cubit/sign_up_cubit.dart';
 import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
+import 'package:capture/features/history/bloc/history_bloc.dart';
 import 'package:capture/features/history/presentations/history_page.dart';
 import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
@@ -88,7 +89,14 @@ class AppRouter {
                 path: Destination.historyPath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const HistoryPage(),
+                    child: MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (_) => HistoryBloc(_homeRepository),
+                        ),
+                      ],
+                      child: const HistoryPage(),
+                    ),
                     state: state,
                   );
                 },

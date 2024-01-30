@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/models/product_detail.dart';
 
 class SnapCreate {

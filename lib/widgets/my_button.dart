@@ -9,6 +9,7 @@ class MyButton extends StatefulWidget {
   final double horizontalPadding;
   final bool disable;
   final Color? color;
+  final double fontSize;
   final Color? textColor;
   final double borderRadius;
   final TypeButton typeButton;
@@ -24,6 +25,7 @@ class MyButton extends StatefulWidget {
     this.typeButton = TypeButton.filled,
     this.disable = false,
     this.color,
+    this.fontSize = 16,
     this.textColor,
     this.focusNode,
   }) : super(key: key);
@@ -66,7 +68,7 @@ class _MyButtonState extends State<MyButton> {
       child: Text(
         widget.text,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: widget.fontSize,
           color: widget.textColor ?? Theme.of(context).colorScheme.onPrimary,
         ),
       ),
@@ -89,7 +91,7 @@ class _MyButtonState extends State<MyButton> {
       child: Text(
         widget.text,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: widget.fontSize,
           color: widget.textColor ?? Theme.of(context).colorScheme.onPrimary,
         ),
       ),
@@ -114,7 +116,7 @@ class _MyButtonState extends State<MyButton> {
       child: Text(
         widget.text,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: widget.fontSize,
           color: widget.textColor ??
               Theme.of(context).colorScheme.onPrimaryContainer,
         ),
