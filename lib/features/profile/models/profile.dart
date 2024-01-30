@@ -100,8 +100,9 @@ class Profile {
         "email": email,
         "password": password,
         "phone": phone,
-        "tgl_lahir":
-            "${tglLahir!.year.toString().padLeft(4, '0')}-${tglLahir!.month.toString().padLeft(2, '0')}-${tglLahir!.day.toString().padLeft(2, '0')}",
+        "tgl_lahir": (tglLahir == null)
+            ? null
+            : "${tglLahir!.year.toString().padLeft(4, '0')}-${tglLahir!.month.toString().padLeft(2, '0')}-${tglLahir!.day.toString().padLeft(2, '0')}",
         "gender": gender,
         "id_role": idRole,
         "is_active": isActive,
