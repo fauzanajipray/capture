@@ -11,7 +11,9 @@ import 'package:capture/features/history/presentations/history_page.dart';
 import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
+import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
+import 'package:capture/features/home/presentations/product_detail_page.dart';
 import 'package:capture/features/home/presentations/product_page.dart';
 import 'package:capture/features/home/presentations/search_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
@@ -21,6 +23,11 @@ import 'package:capture/features/profile/cubit/profile_update_cubit.dart';
 import 'package:capture/features/profile/presentations/profile_page.dart';
 import 'package:capture/features/profile/repository/profile_repository.dart';
 import 'package:capture/features/starter/presentations/onboard_page.dart';
+import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart';
+import 'package:capture/features/transaction/model/snap_create.dart';
+import 'package:capture/features/transaction/presentations/payment_page.dart';
+import 'package:capture/features/transaction/repository/transaction_repository.dart';
+import 'package:capture/main.dart';
 import 'package:capture/widgets/bottom_navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -187,7 +194,60 @@ class AppRouter {
       ),
       GoRoute(
         parentNavigatorKey: parentNavigatorKey,
-        path: Destination.productDetail,
+        path: Destination.productPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: BlocProvider<SignUpCubit>(
+              create: (context) => SignUpCubit(_authRepository),
+              child: const ProductPage(),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.productDetailPath,
+        pageBuilder: (context, state) {
+          int id = int.parse(state.pathParameters['id'] ?? '0');
+          return getPage(
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) =>
+                      CreateTransactionCubit(TransactionRepository()),
+                ),
+              ],
+              child: ProductDetailPage(id),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.paymentPath,
+        pageBuilder: (context, state) {
+          String data = state.extra as String;
+          logger.d(data);
+          SnapPayment datas = SnapPayment.fromRawJson(data);
+          return getPage(
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) =>
+                      CreateTransactionCubit(TransactionRepository()),
+                ),
+              ],
+              child: PaymentPage(datas.token ?? '', datas.product),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.productPath,
         pageBuilder: (context, state) {
           return getPage(
             child: BlocProvider<SignUpCubit>(
@@ -275,11 +335,13 @@ class Destination {
 
   // Need Auth
   static const String homePath = '/home';
-  static const String productDetail = '/productDetail';
+  static const String productPath = '/product';
+  static const String productDetailPath = '/product/:id';
   static const String historyPath = '/history';
   static const String notifPath = '/notif';
   static const String profilePath = '/profile';
   static const String searchPath = '/search/:key';
+  static const String paymentPath = '/payment';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {

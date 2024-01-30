@@ -1,6 +1,5 @@
 import 'package:capture/constant/app.dart';
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
-import 'package:capture/main.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';

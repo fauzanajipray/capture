@@ -30,6 +30,10 @@ dependencies:
   lottie: ^2.6.0
   carousel_slider: ^4.2.1
   flutter_statusbarcolor_ns: ^0.5.0
+  midtrans_sdk: ^0.3.4
+  http: ^1.1.2
+  dartz: ^0.10.1
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:

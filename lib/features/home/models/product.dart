@@ -67,7 +67,7 @@ class Product {
         deskripsi: json["deskripsi"],
         linkYoutube: json["link_youtube"],
         totalHargaPackageMerchant:
-            int.parse(json["total_harga_package_merchant"]),
+            int.parse(json["total_harga_package_merchant"] ?? '0'),
         stsRekomendasi: json["sts_rekomendasi"],
         deleteSts: json["delete_sts"],
         createdAt: json["created_at"] == null

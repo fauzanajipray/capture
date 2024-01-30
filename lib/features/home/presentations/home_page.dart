@@ -229,67 +229,64 @@ class ProductCard extends StatelessWidget {
       margin: (margin != null)
           ? margin
           : const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                context.push(Destination.productDetail);
-              },
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Container(
-                      color: Colors.transparent, //
-                      width: 145.0,
-                      height: 90.0,
-                      child: Image.network(
-                        '${AppConstant.baseUrlImage}/logo/${item.logo}',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(child: Text('Error'));
-                        },
-                      ),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: InkWell(
+          onTap: () {
+            context.push(Destination.productDetailPath
+                .replaceAll(':id', "${item.idMerchant}"));
+          },
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Container(
+                  color: Colors.transparent, //
+                  width: 145.0,
+                  height: 90.0,
+                  child: Image.network(
+                    '${AppConstant.baseUrlImage}/logo/${item.logo}',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(child: Text('Error'));
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    '${item.namaMerchant}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Lato',
+                      fontWeight: FontWeight.w600,
+                      height: 0.08,
                     ),
                   ),
-                  Expanded(
-                    child: ListTile(
-                      title: Text(
-                        '${item.namaMerchant}',
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Rp ${formatCurrency(item.totalHargaPackageMerchant ?? 0)}',
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 13,
                           fontFamily: 'Lato',
-                          fontWeight: FontWeight.w600,
-                          height: 0.08,
+                          fontWeight: FontWeight.w500,
+                          height: 0.13,
                         ),
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Rp ${formatCurrency(item.totalHargaPackageMerchant ?? 0)}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w500,
-                              height: 0.13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
