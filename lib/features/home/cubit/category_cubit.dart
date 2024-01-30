@@ -10,9 +10,10 @@ class CategoryCubit extends Cubit<CategoryState> {
   final HomeRepository _repository;
 
   Future<void> getCategory() async {
-    emit(state.copyWith(status: LoadStatus.loading));
+    if (state.data.isEmpty) {
+      emit(state.copyWith(status: LoadStatus.loading));
+    }
     try {
-      await Future.delayed(const Duration(seconds: 4));
       Map<String, dynamic> response = await _repository.getCategoryOwner();
       var data = response['data'] as List;
       List<Category> list = data.map((x) => Category.fromJson(x)).toList();

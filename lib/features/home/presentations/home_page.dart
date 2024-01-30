@@ -139,12 +139,15 @@ class _HomePageState extends State<HomePage> {
                         itemCount: state.data.length,
                         itemBuilder: (context, index) {
                           Category item = state.data[index];
-
                           return Container(
                             margin: const EdgeInsets.only(right: 8),
                             child: InkWell(
                               onTap: () {
-                                print('Gambar diklik!');
+                                context.push(
+                                  Destination.categoryProductPath.replaceAll(
+                                      ':id', item.idKategori ?? '0'),
+                                  extra: item.namaKategori,
+                                );
                               },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(70.0),

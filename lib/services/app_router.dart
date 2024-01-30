@@ -12,6 +12,7 @@ import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
 import 'package:capture/features/home/cubit/product_detail_cubit.dart';
+import 'package:capture/features/home/presentations/category_product_page.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
 import 'package:capture/features/home/presentations/product_detail_page.dart';
 import 'package:capture/features/home/presentations/search_page.dart';
@@ -26,7 +27,6 @@ import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart
 import 'package:capture/features/transaction/model/snap_create.dart';
 import 'package:capture/features/transaction/presentations/payment_page.dart';
 import 'package:capture/features/transaction/repository/transaction_repository.dart';
-import 'package:capture/main.dart';
 import 'package:capture/widgets/bottom_navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -218,7 +218,6 @@ class AppRouter {
         path: Destination.paymentPath,
         pageBuilder: (context, state) {
           String data = state.extra as String;
-          logger.d(data);
           SnapPayment datas = SnapPayment.fromRawJson(data);
           return getPage(
             child: MultiBlocProvider(
@@ -243,6 +242,21 @@ class AppRouter {
             child: BlocProvider<ProductSearchBloc>(
               create: (context) => ProductSearchBloc(_homeRepository),
               child: SearchPage(searchKey),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.categoryProductPath,
+        pageBuilder: (context, state) {
+          int id = int.parse(state.pathParameters['id'] ?? '0');
+          String name = state.extra as String;
+          return getPage(
+            child: BlocProvider<ProductSearchBloc>(
+              create: (context) => ProductSearchBloc(_homeRepository),
+              child: CategoryProductPage(id, name),
             ),
             state: state,
           );
@@ -317,6 +331,7 @@ class Destination {
   static const String profilePath = '/profile';
   static const String searchPath = '/search/:key';
   static const String paymentPath = '/payment';
+  static const String categoryProductPath = '/search/category/:id';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {
