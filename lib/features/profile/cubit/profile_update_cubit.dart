@@ -15,7 +15,7 @@ class ProfileUpdateCubit extends Cubit<DataState<Profile>> {
       String data = request.toRawJson();
       Map<String, dynamic>? response = await _repository.updateProfile(data);
 
-      Profile? newProfile = Profile.fromJson(response);
+      Profile? newProfile = Profile.fromJson(response['data']);
       emit(state.copyWith(
         status: LoadStatus.success,
         data: response,

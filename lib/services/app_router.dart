@@ -11,10 +11,9 @@ import 'package:capture/features/history/presentations/history_page.dart';
 import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
 import 'package:capture/features/home/cubit/category_cubit.dart';
-import 'package:capture/features/home/models/product.dart';
+import 'package:capture/features/home/cubit/product_detail_cubit.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
 import 'package:capture/features/home/presentations/product_detail_page.dart';
-import 'package:capture/features/home/presentations/product_page.dart';
 import 'package:capture/features/home/presentations/search_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
 import 'package:capture/features/notification/presentations/notification_page.dart';
@@ -194,19 +193,6 @@ class AppRouter {
       ),
       GoRoute(
         parentNavigatorKey: parentNavigatorKey,
-        path: Destination.productPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: BlocProvider<SignUpCubit>(
-              create: (context) => SignUpCubit(_authRepository),
-              child: const ProductPage(),
-            ),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
         path: Destination.productDetailPath,
         pageBuilder: (context, state) {
           int id = int.parse(state.pathParameters['id'] ?? '0');
@@ -216,6 +202,9 @@ class AppRouter {
                 BlocProvider(
                   create: (_) =>
                       CreateTransactionCubit(TransactionRepository()),
+                ),
+                BlocProvider(
+                  create: (_) => ProductDetailCubit(_homeRepository),
                 ),
               ],
               child: ProductDetailPage(id),
@@ -240,19 +229,6 @@ class AppRouter {
                 ),
               ],
               child: PaymentPage(datas.token ?? '', datas.product),
-            ),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
-        path: Destination.productPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: BlocProvider<SignUpCubit>(
-              create: (context) => SignUpCubit(_authRepository),
-              child: const ProductPage(),
             ),
             state: state,
           );
@@ -335,7 +311,6 @@ class Destination {
 
   // Need Auth
   static const String homePath = '/home';
-  static const String productPath = '/product';
   static const String productDetailPath = '/product/:id';
   static const String historyPath = '/history';
   static const String notifPath = '/notif';

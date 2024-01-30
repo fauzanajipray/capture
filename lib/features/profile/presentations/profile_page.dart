@@ -34,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isEdit = false;
 
   late Profile _request;
+  late Profile _requestTemp;
   late ProfileCubit _profileCubit;
   late ProfileUpdateCubit _profileUpdateCubit;
 
@@ -57,16 +58,51 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('My Profile'),
         actions: [
           if (isEdit)
-            IconButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _profileUpdateCubit.update(_request);
-                    setState(() {
-                      isEdit = !isEdit;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.save)),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  isEdit = !isEdit;
+                  _request = _requestTemp;
+                  _nameController.text = _requestTemp.nama ?? '';
+                  _usernameController.text = _requestTemp.username ?? '';
+                  _emailController.text = _requestTemp.email ?? '';
+                  _telpController.text = _requestTemp.phone ?? '';
+                  _passwordController.text = '';
+                  _passwordConfirmController.text = '';
+                });
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          if (isEdit)
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _profileUpdateCubit.update(_request);
+                  setState(() {
+                    isEdit = !isEdit;
+                  });
+                }
+              },
+              child: const Text(
+                'Save',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          if (!isEdit)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  isEdit = !isEdit;
+                });
+              },
+              child: const Text(
+                'Edit',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
         ],
       ),
       body: BlocConsumer<ProfileCubit, DataState<Profile>>(
@@ -76,7 +112,9 @@ class _ProfilePageState extends State<ProfilePage> {
             if (item != null) {
               setState(() {
                 _request = item;
+                _requestTemp = item;
                 _nameController.text = item.nama ?? '';
+                _usernameController.text = item.username ?? '';
                 _emailController.text = item.email ?? '';
                 _telpController.text = item.phone ?? '';
               });
@@ -97,113 +135,105 @@ class _ProfilePageState extends State<ProfilePage> {
                     onRetry: () => _profileCubit.getProfile()));
           }
           return BlocConsumer<ProfileUpdateCubit, DataState<Profile>>(
-              listener: (context, stateUpdate) {
-            if (stateUpdate.status == LoadStatus.success) {
-              setState(() {
-                // _errorProfileUpdate = ErrorProfile();
-                _request = stateUpdate.item ?? Profile();
-                _nameController.text = stateUpdate.item?.nama ?? '';
-                _usernameController.text = stateUpdate.item?.username ?? '';
-                _telpController.text = stateUpdate.item?.phone ?? '';
-                _emailController.text = stateUpdate.item?.email ?? '';
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Successfully updated profile'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            } else if (stateUpdate.status == LoadStatus.failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Error update profile'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            }
-          }, builder: (context, stateUpdate) {
-            return ListView(
-              children: [
-                const SizedBox(height: 16),
-                ListTile(
-                  title: Text(
-                    _request.nama ?? '',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.800000011920929),
-                      fontSize: 18,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w700,
-                      height: 0.05,
-                      letterSpacing: 0.18,
-                    ),
+            listener: (context, stateUpdate) {
+              if (stateUpdate.status == LoadStatus.success) {
+                setState(() {
+                  // _errorProfileUpdate = ErrorProfile();
+                  _request = stateUpdate.item ?? Profile();
+                  _requestTemp = stateUpdate.item ?? Profile();
+                  _nameController.text = stateUpdate.item?.nama ?? '';
+                  _usernameController.text = stateUpdate.item?.username ?? '';
+                  _telpController.text = stateUpdate.item?.phone ?? '';
+                  _emailController.text = stateUpdate.item?.email ?? '';
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Successfully updated profile'),
+                    duration: Duration(seconds: 2),
                   ),
-                  subtitle: Text(
-                    _request.username ?? '',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.800000011920929),
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                      height: 0.06,
-                      letterSpacing: 0.16,
-                    ),
+                );
+              } else if (stateUpdate.status == LoadStatus.failure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Error update profile'),
+                    duration: Duration(seconds: 2),
                   ),
-                  trailing: (!isEdit)
-                      ? IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isEdit = !isEdit;
-                            });
-                          },
-                          icon: const Icon(Icons.edit))
-                      : null,
-                  leading: ClipOval(
-                    child: Container(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 60.0,
-                      height: 60.0,
-                      child: ExtendedImage.network(
-                        "https://via.placeholder.com/60x60",
-                        // headers: {"Authorization": token},
-                        compressionRatio: kIsWeb ? null : 0.2,
-                        clearMemoryCacheWhenDispose: true,
-                        cache: true,
-                        fit: BoxFit.cover,
-                        loadStateChanged: (ExtendedImageState state) {
-                          if (state.extendedImageLoadState ==
-                              LoadState.completed) {
-                            return state.completedWidget;
-                          } else {
-                            return Center(
-                                child: Text(
-                              'PP',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSecondary),
-                            ));
+                );
+              }
+            },
+            builder: (context, stateUpdate) {
+              return ListView(
+                children: [
+                  const SizedBox(height: 16),
+                  ListTile(
+                    title: Text(
+                      _request.nama ?? '',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.800000011920929),
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
+                        height: 0.05,
+                        letterSpacing: 0.18,
+                      ),
+                    ),
+                    subtitle: Text(
+                      _request.username ?? '',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.800000011920929),
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w400,
+                        height: 0.06,
+                        letterSpacing: 0.16,
+                      ),
+                    ),
+                    leading: ClipOval(
+                      child: Container(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 60.0,
+                        height: 60.0,
+                        child: ExtendedImage.network(
+                          "https://via.placeholder.com/60x60",
+                          // headers: {"Authorization": token},
+                          compressionRatio: kIsWeb ? null : 0.2,
+                          clearMemoryCacheWhenDispose: true,
+                          cache: true,
+                          fit: BoxFit.cover,
+                          loadStateChanged: (ExtendedImageState state) {
+                            if (state.extendedImageLoadState ==
+                                LoadState.completed) {
+                              return state.completedWidget;
+                            } else {
+                              return Center(
+                                  child: Text(
+                                'PP',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary),
+                              ));
 
-                            // return Center(
-                            //   child: Text(
-                            //     widget.item.name != null
-                            //         ? widget.item.name!.length == 1
-                            //             ? widget.item.name!.toUpperCase()
-                            //             : widget.item.name!
-                            //                 .substring(0, 2)
-                            //                 .toUpperCase()
-                            //         : '',
-                            //     style: TextStyle(
-                            //         color: Theme.of(context).colorScheme.onSecondary),
-                            //   ),
-                            // );
-                          }
-                        },
+                              // return Center(
+                              //   child: Text(
+                              //     widget.item.name != null
+                              //         ? widget.item.name!.length == 1
+                              //             ? widget.item.name!.toUpperCase()
+                              //             : widget.item.name!
+                              //                 .substring(0, 2)
+                              //                 .toUpperCase()
+                              //         : '',
+                              //     style: TextStyle(
+                              //         color: Theme.of(context).colorScheme.onSecondary),
+                              //   ),
+                              // );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (isEdit)
                   Form(
                     key: _formKey,
                     child: Container(
@@ -228,6 +258,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             readOnly: !isEdit,
                             filled: false,
                             textColor: Theme.of(context).colorScheme.onSurface,
+                            onChange: (value) {
+                              setState(() {
+                                _request.nama = value;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           MyTextField(
@@ -246,6 +281,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             readOnly: !isEdit,
                             filled: false,
                             textColor: Theme.of(context).colorScheme.onSurface,
+                            onChange: (value) {
+                              setState(() {
+                                _request.username = value;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           MyTextField(
@@ -264,6 +304,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             readOnly: !isEdit,
                             filled: false,
                             textColor: Theme.of(context).colorScheme.onSurface,
+                            onChange: (value) {
+                              setState(() {
+                                _request.phone = value;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           MyTextField(
@@ -288,6 +333,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             readOnly: !isEdit,
                             filled: false,
                             textColor: Theme.of(context).colorScheme.onSurface,
+                            onChange: (value) {
+                              setState(() {
+                                _request.email = value;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           MyTextField(
@@ -308,6 +358,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             readOnly: !isEdit,
                             filled: false,
                             textColor: Theme.of(context).colorScheme.onSurface,
+                            onChange: (value) {
+                              setState(() {
+                                _request.password = value;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           MyTextField(
@@ -334,27 +389,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                const SizedBox(height: 50),
-                Center(
-                    child: SizedBox(
-                  width: 120,
-                  height: 43,
-                  child: MyButton(
-                    onPressed: () {
-                      showDialogConfirmationDelete(
-                        context,
-                        () => context.read<AuthCubit>().setUnauthenticated(),
-                        message: 'Are you sure you want to log out?',
-                        errorBtn: 'Confirm',
-                      );
-                    },
-                    text: 'Logout',
-                    verticalPadding: 10,
-                  ),
-                ))
-              ],
-            );
-          });
+                  const SizedBox(height: 50),
+                  Center(
+                      child: SizedBox(
+                    width: 120,
+                    height: 43,
+                    child: MyButton(
+                      onPressed: () {
+                        showDialogConfirmationDelete(
+                          context,
+                          () => context.read<AuthCubit>().setUnauthenticated(),
+                          message: 'Are you sure you want to log out?',
+                          errorBtn: 'Confirm',
+                        );
+                      },
+                      text: 'Logout',
+                      verticalPadding: 10,
+                    ),
+                  ))
+                ],
+              );
+            },
+          );
         },
       ),
     );

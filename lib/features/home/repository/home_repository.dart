@@ -38,4 +38,9 @@ class HomeRepository {
         await _dio.get('/merchant', queryParameters: queryParameters);
     return response.data;
   }
+
+  Future<Map<String, dynamic>> getProductDetail(int merchantId) async {
+    Response response = await _dio.get('/merchant/$merchantId');
+    return response.data;
+  }
 }
