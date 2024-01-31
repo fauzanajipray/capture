@@ -18,6 +18,7 @@ import 'package:capture/features/home/presentations/home_page.dart';
 import 'package:capture/features/home/presentations/product_detail_page.dart';
 import 'package:capture/features/home/presentations/search_page.dart';
 import 'package:capture/features/home/repository/home_repository.dart';
+import 'package:capture/features/notification/bloc/notification_bloc.dart';
 import 'package:capture/features/notification/presentations/notification_page.dart';
 import 'package:capture/features/profile/cubit/profile_cubit.dart';
 import 'package:capture/features/profile/cubit/profile_update_cubit.dart';
@@ -110,7 +111,11 @@ class AppRouter {
                 path: Destination.notifPath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const NotificationPage(),
+                    child: MultiBlocProvider(providers: [
+                      BlocProvider(
+                        create: (_) => NotifBloc(_homeRepository),
+                      ),
+                    ], child: const NotificationPage()),
                     state: state,
                   );
                 },

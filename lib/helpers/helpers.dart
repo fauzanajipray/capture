@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 void showDialogMsg(BuildContext mainContext, String errorMessage,
     {String title = 'Error'}) {
@@ -78,12 +79,26 @@ String capitalize(String text) {
 }
 
 String formatDateTimeCustom(DateTime? dateTime,
-    {String format = 'dd-MMM-yyyy, HH:mm', String ifnull = '-'}) {
+    {String format = 'dd-MMM-yyyy, HH:mm',
+    String ifnull = '-',
+    bool difference = false}) {
   if (dateTime == null) {
     return ifnull;
   } else {
-    final DateFormat formatter = DateFormat(format, 'id_ID');
-    return formatter.format(dateTime);
+    if (difference) {
+      final now = DateTime.now();
+      final difference = now.difference(dateTime);
+
+      if (difference.inHours < 24) {
+        return timeago.format(dateTime, locale: 'id');
+      } else {
+        final DateFormat formatter = DateFormat(format, 'id_ID');
+        return formatter.format(dateTime);
+      }
+    } else {
+      final DateFormat formatter = DateFormat(format, 'id_ID');
+      return formatter.format(dateTime);
+    }
   }
 }
 

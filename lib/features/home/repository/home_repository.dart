@@ -52,4 +52,13 @@ class HomeRepository {
         await _dio.get('/historypayment', queryParameters: queryParameters);
     return response.data;
   }
+
+  Future<Map<String, dynamic>> getNotifications(int page) async {
+    final queryParameters = {
+      'page': page.toString(),
+    };
+    Response response = await _dio.get('/notification/notification_customer',
+        queryParameters: queryParameters);
+    return response.data;
+  }
 }
