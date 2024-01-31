@@ -363,8 +363,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               obscureText: true,
                               validator: (value) {
                                 String pass = value ?? '';
-                                if (pass != '' && pass.length < 6) {
-                                  return 'Password must be at least 6 characters long';
+                                if (pass != '' && pass.length < 8) {
+                                  return 'Password must be at least 8 characters long';
                                 }
                                 return null;
                               },

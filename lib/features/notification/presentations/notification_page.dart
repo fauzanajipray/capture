@@ -48,7 +48,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: const Text('Notification'),
       ),
       body: RefreshIndicator(
         onRefresh: () => Future.sync(

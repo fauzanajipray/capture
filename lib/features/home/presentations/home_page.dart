@@ -128,53 +128,77 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.only(left: 16, top: 16),
-                height: 70,
-                child: BlocBuilder<CategoryCubit, CategoryState>(
-                  builder: (context, state) {
-                    if (state.status == LoadStatus.success) {
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.data.length,
-                        itemBuilder: (context, index) {
-                          Category item = state.data[index];
-                          return Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            child: InkWell(
-                              onTap: () {
-                                context.push(
-                                  Destination.categoryProductPath.replaceAll(
-                                      ':id', item.idKategori ?? '0'),
-                                  extra: item.namaKategori,
-                                );
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(70.0),
-                                child: Image.network(
-                                  '${AppConstant.baseUrlImage}/logo/${item.logo}',
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 16, top: 16),
+                    height: 90,
+                    child: BlocBuilder<CategoryCubit, CategoryState>(
+                      builder: (context, state) {
+                        if (state.status == LoadStatus.success) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.data.length,
+                            itemBuilder: (context, index) {
+                              Category item = state.data[index];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      height: 70,
+                                      margin: const EdgeInsets.only(right: 8),
+                                      child: InkWell(
+                                        onTap: () {
+                                          context.push(
+                                            Destination.categoryProductPath
+                                                .replaceAll(':id',
+                                                    item.idKategori ?? '0'),
+                                            extra: item.namaKategori,
+                                          );
+                                        },
+                                        child: ClipRRect(
+                                          child: Image.network(
+                                            '${AppConstant.baseUrlImage}/logo/${item.logo}',
+                                            width: 70,
+                                            height: 70,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    height: 15,
+                                    child: Center(
+                                      child: Text(
+                                        item.namaKategori ?? '',
+                                        style: const TextStyle(fontSize: 11),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           );
-                        },
-                      );
-                    } else if (state.status == LoadStatus.loading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state.status == LoadStatus.failure) {
-                      // return const Text('Error');
-                      return Center(
-                          child: errorData(context, state.error,
-                              isImage: false,
-                              onRetry: () => _categoryCubit.getCategory()));
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+                        } else if (state.status == LoadStatus.loading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (state.status == LoadStatus.failure) {
+                          // return const Text('Error');
+                          return Center(
+                              child: errorData(context, state.error,
+                                  isImage: false,
+                                  onRetry: () => _categoryCubit.getCategory()));
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             SliverToBoxAdapter(
