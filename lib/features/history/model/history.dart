@@ -7,6 +7,7 @@ class History {
   String? logo;
   int? totalHargaPackageMerchant;
   String? nama;
+  String? token;
   String? noOrder;
   DateTime? createdAt;
 
@@ -17,6 +18,7 @@ class History {
     this.logo,
     this.totalHargaPackageMerchant,
     this.nama,
+    this.token,
     this.noOrder,
     this.createdAt,
   });
@@ -28,6 +30,7 @@ class History {
     String? logo,
     int? totalHargaPackageMerchant,
     String? nama,
+    String? token,
     String? noOrder,
     DateTime? createdAt,
   }) =>
@@ -39,6 +42,7 @@ class History {
         totalHargaPackageMerchant:
             totalHargaPackageMerchant ?? this.totalHargaPackageMerchant,
         nama: nama ?? this.nama,
+        token: token ?? this.token,
         noOrder: noOrder ?? this.noOrder,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -52,9 +56,12 @@ class History {
         statusPembayaran: json["status_pembayaran"],
         namaMerchant: json["nama_merchant"],
         logo: json["logo"],
-        totalHargaPackageMerchant:
-            int.parse(json["total_harga_package_merchant"] ?? '0'),
+        totalHargaPackageMerchant: (json["total_harga_package_merchant"] is int)
+            ? json["total_harga_package_merchant"]
+            : int.tryParse(json["total_harga_package_merchant"]),
         nama: json["nama"],
+        noOrder: json['no_order'],
+        token: json['token'],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -67,6 +74,7 @@ class History {
         "logo": logo,
         "total_harga_package_merchant": totalHargaPackageMerchant,
         "nama": nama,
+        "token": token,
         "created_at": createdAt?.toIso8601String(),
       };
 }

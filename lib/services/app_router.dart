@@ -8,6 +8,7 @@ import 'package:capture/features/auth/presentations/sign_in_page.dart';
 import 'package:capture/features/auth/presentations/sign_up_page.dart';
 import 'package:capture/features/auth/repository/auth_repositry.dart';
 import 'package:capture/features/history/bloc/history_bloc.dart';
+import 'package:capture/features/history/model/history.dart';
 import 'package:capture/features/history/presentations/history_page.dart';
 import 'package:capture/features/home/bloc/product_listing_bloc.dart';
 import 'package:capture/features/home/bloc/recomendation_bloc.dart';
@@ -28,6 +29,7 @@ import 'package:capture/features/starter/presentations/onboard_page.dart';
 import 'package:capture/features/transaction/cubit/callback_payment_cubit.dart';
 import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart';
 import 'package:capture/features/transaction/model/snap_create.dart';
+import 'package:capture/features/transaction/presentations/payment_history_page.dart';
 import 'package:capture/features/transaction/presentations/payment_page.dart';
 import 'package:capture/features/transaction/repository/transaction_repository.dart';
 import 'package:capture/widgets/bottom_navigation_page.dart';
@@ -252,6 +254,48 @@ class AppRouter {
       ),
       GoRoute(
         parentNavigatorKey: parentNavigatorKey,
+        path: Destination.paymentPath,
+        pageBuilder: (context, state) {
+          String data = state.extra as String;
+          SnapPayment datas = SnapPayment.fromRawJson(data);
+          return getPage(
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) =>
+                      CreateTransactionCubit(TransactionRepository()),
+                ),
+                BlocProvider(
+                  create: (_) => CallbackPaymentCubit(TransactionRepository()),
+                ),
+              ],
+              child: PaymentPage(datas.token ?? '', datas.product),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.paymentHistoryPath,
+        pageBuilder: (context, state) {
+          String data = state.extra as String;
+          History datas = History.fromRawJson(data);
+          return getPage(
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) => CallbackPaymentCubit(TransactionRepository()),
+                ),
+              ],
+              child: PaymentHistoryPage(datas),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
         path: Destination.searchPath,
         pageBuilder: (context, state) {
           String? searchKey = state.pathParameters['key'];
@@ -348,6 +392,7 @@ class Destination {
   static const String profilePath = '/profile';
   static const String searchPath = '/search/:key';
   static const String paymentPath = '/payment';
+  static const String paymentHistoryPath = '/payment-history';
   static const String categoryProductPath = '/search/category/:id';
   static const String snapPath = '/snap';
 }

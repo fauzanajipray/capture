@@ -3,12 +3,14 @@ import 'package:capture/features/history/model/history.dart';
 import 'package:capture/features/home/bloc/list_pagination_event.dart';
 import 'package:capture/features/transaction/presentations/payment_page.dart';
 import 'package:capture/helpers/helpers.dart';
+import 'package:capture/services/app_router.dart';
 import 'package:capture/utils/data_list_state.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:capture/utils/my_paged_list_view.dart';
 import 'package:capture/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -79,23 +81,35 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                       child: InkWell(
                         onTap: () {
-                          // context.push(Destination.productDetailPath
-                          //     .replaceAll(':id', "${item.idMerchant}"));
+                          context.push(Destination.paymentHistoryPath,
+                              extra: item.toRawJson());
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 8),
+                              padding: const EdgeInsets.only(top: 8.0),
                               child: DataRowCustom(
                                 DataValueCustom(
                                   leftValue: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        formatDateTimeCustom(item.createdAt,
-                                            format: 'dd-MMM-yyyy'),
+                                        "#${item.noOrder}",
                                         textAlign: TextAlign.start,
-                                      )
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        formatDateTimeCustom(item.createdAt,
+                                            format: 'dd-MMM-yyyy',
+                                            difference: true),
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
                                     ],
                                   ),
                                   rightValue: TextBadge(
@@ -148,7 +162,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                   width: 80,
                                   height: 35,
                                   child: MyButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.push(
+                                          Destination.paymentHistoryPath,
+                                          extra: item.toRawJson());
+                                    },
                                     text: 'Cek',
                                     verticalPadding: 4,
                                     horizontalPadding: 4,
