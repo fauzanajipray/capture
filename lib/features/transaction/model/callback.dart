@@ -1,55 +1,57 @@
 import 'dart:convert';
 
-class History {
+class Callback {
   String? idRekapPembayaran;
   String? statusPembayaran;
+  String? noOrder;
   String? namaMerchant;
   String? logo;
   int? totalHargaPackageMerchant;
   String? nama;
-  String? noOrder;
   DateTime? createdAt;
 
-  History({
+  Callback({
     this.idRekapPembayaran,
     this.statusPembayaran,
+    this.noOrder,
     this.namaMerchant,
     this.logo,
     this.totalHargaPackageMerchant,
     this.nama,
-    this.noOrder,
     this.createdAt,
   });
 
-  History copyWith({
+  Callback copyWith({
     String? idRekapPembayaran,
     String? statusPembayaran,
+    String? noOrder,
     String? namaMerchant,
     String? logo,
     int? totalHargaPackageMerchant,
     String? nama,
-    String? noOrder,
     DateTime? createdAt,
   }) =>
-      History(
+      Callback(
         idRekapPembayaran: idRekapPembayaran ?? this.idRekapPembayaran,
         statusPembayaran: statusPembayaran ?? this.statusPembayaran,
+        noOrder: noOrder ?? this.noOrder,
         namaMerchant: namaMerchant ?? this.namaMerchant,
         logo: logo ?? this.logo,
         totalHargaPackageMerchant:
             totalHargaPackageMerchant ?? this.totalHargaPackageMerchant,
         nama: nama ?? this.nama,
-        noOrder: noOrder ?? this.noOrder,
         createdAt: createdAt ?? this.createdAt,
       );
 
-  factory History.fromRawJson(String str) => History.fromJson(json.decode(str));
+  factory Callback.fromRawJson(String str) =>
+      Callback.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory History.fromJson(Map<String, dynamic> json) => History(
+  factory Callback.fromJson(Map<String, dynamic> json) => Callback(
         idRekapPembayaran: json["id_rekap_pembayaran"],
         statusPembayaran: json["status_pembayaran"],
+        noOrder: json["no_order"],
         namaMerchant: json["nama_merchant"],
         logo: json["logo"],
         totalHargaPackageMerchant:
@@ -63,6 +65,7 @@ class History {
   Map<String, dynamic> toJson() => {
         "id_rekap_pembayaran": idRekapPembayaran,
         "status_pembayaran": statusPembayaran,
+        "no_order": noOrder,
         "nama_merchant": namaMerchant,
         "logo": logo,
         "total_harga_package_merchant": totalHargaPackageMerchant,

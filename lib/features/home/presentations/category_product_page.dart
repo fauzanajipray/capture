@@ -3,6 +3,7 @@ import 'package:capture/features/home/bloc/product_listing_event.dart';
 import 'package:capture/features/home/bloc/product_listing_state.dart';
 import 'package:capture/features/home/models/product.dart';
 import 'package:capture/features/home/presentations/home_page.dart';
+import 'package:capture/main.dart';
 import 'package:capture/utils/load_status.dart';
 import 'package:capture/utils/my_paged_list_view.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
 
   @override
   void initState() {
+    logger.d(widget.categoryId);
     productBloc = context.read<ProductSearchBloc>();
     _pagingController.addPageRequestListener((pageKey) {
       productBloc.add(FetchItemEvent(pageKey, widget.categoryId, null));

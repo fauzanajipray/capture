@@ -72,7 +72,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 itemBuilder: (context, item, index) {
                   return Container(
                     margin:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.0),
@@ -83,14 +83,21 @@ class _HistoryPageState extends State<HistoryPage> {
                           //     .replaceAll(':id', "${item.idMerchant}"));
                         },
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: DataRowCustom(
                                 DataValueCustom(
-                                  leftValue: Text(formatDateTimeCustom(
-                                      item.createdAt,
-                                      format: 'dd-MMM-yyyy')),
+                                  leftValue: Column(
+                                    children: [
+                                      Text(
+                                        formatDateTimeCustom(item.createdAt,
+                                            format: 'dd-MMM-yyyy'),
+                                        textAlign: TextAlign.start,
+                                      )
+                                    ],
+                                  ),
                                   rightValue: TextBadge(
                                     text: Text(
                                       capitalize(

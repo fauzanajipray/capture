@@ -1,11 +1,12 @@
 import 'package:capture/constant/app.dart';
 import 'package:capture/features/home/models/product_detail.dart';
 import 'package:capture/features/transaction/cubit/callback_payment_cubit.dart';
-import 'package:capture/features/transaction/model/snap_create.dart';
+import 'package:capture/features/transaction/model/callback.dart';
 import 'package:capture/features/transaction/model/transaction_callback.dart';
 import 'package:capture/helpers/helpers.dart';
 import 'package:capture/main.dart';
 import 'package:capture/utils/data_state.dart';
+import 'package:capture/utils/load_status.dart';
 import 'package:capture/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,11 +27,12 @@ class _PaymentPageState extends State<PaymentPage> {
   late final MidtransSDK? _midtrans;
   late CallbackPaymentCubit _callbackPaymentCubit;
 
-  String status = 'waiting';
+  late Callback _request;
 
   @override
   void initState() {
     _callbackPaymentCubit = context.read<CallbackPaymentCubit>();
+    _request = Callback(statusPembayaran: 'waiting');
     _initSDK();
     super.initState();
   }
@@ -56,6 +58,7 @@ class _PaymentPageState extends State<PaymentPage> {
       if (tc.transactionStatus == 'settlement' ||
           tc.transactionStatus == 'pending') {
         _showToast2(tc.statusMessage ?? 'Success Create Payment');
+        _callbackPaymentCubit.callbackPayment(tc);
       }
     });
   }
@@ -87,9 +90,19 @@ class _PaymentPageState extends State<PaymentPage> {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
-      body: BlocConsumer<CallbackPaymentCubit, DataState<SnapCreate>>(
-        listener: (context, state) {},
+      body: BlocConsumer<CallbackPaymentCubit, DataState<Callback>>(
+        listener: (context, state) {
+          if (state.status == LoadStatus.success) {
+            Callback? item = state.item;
+            if (item != null) {
+              setState(() {
+                _request = item;
+              });
+            }
+          }
+        },
         builder: (context, state) {
+          String? orderId = _request.noOrder;
           return Column(
             children: [
               Expanded(
@@ -182,28 +195,40 @@ class _PaymentPageState extends State<PaymentPage> {
                         style: TextStyle(fontSize: 14),
                       ),
                       rightValue: Text(
-                        capitalize(status),
+                        capitalize(_request.statusPembayaran ?? 'waiting'),
                         style: const TextStyle(fontSize: 14),
                       ),
                     )),
+                    if (orderId != null)
+                      DataRowCustom(DataValueCustom(
+                        leftValue: const Text(
+                          'Order ID',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        rightValue: Text(
+                          capitalize(orderId ?? '-'),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      )),
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                child: MyButton(
-                  onPressed: () async {
-                    _midtrans?.startPaymentUiFlow(
-                      token: widget.token,
-                    );
-                  },
-                  color: const Color(0xFF304AAC),
-                  horizontalPadding: 10,
-                  verticalPadding: 20,
-                  text: 'Bayar',
-                  borderRadius: 10,
+              if (_request.statusPembayaran == 'waiting')
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                  child: MyButton(
+                    onPressed: () async {
+                      _midtrans?.startPaymentUiFlow(
+                        token: widget.token,
+                      );
+                    },
+                    color: const Color(0xFF304AAC),
+                    horizontalPadding: 10,
+                    verticalPadding: 20,
+                    text: 'Bayar',
+                    borderRadius: 10,
+                  ),
                 ),
-              ),
             ],
           );
         },

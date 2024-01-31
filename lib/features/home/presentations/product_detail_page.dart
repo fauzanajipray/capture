@@ -1,3 +1,4 @@
+import 'package:capture/constant/app.dart';
 import 'package:capture/features/home/cubit/product_detail_cubit.dart';
 import 'package:capture/features/home/models/product_detail.dart';
 import 'package:capture/features/transaction/cubit/create_transaction_cubit.dart';
@@ -159,9 +160,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       width: double.infinity,
                                       height: 244,
                                       decoration: ShapeDecoration(
-                                        image: const DecorationImage(
+                                        image: DecorationImage(
                                           image: NetworkImage(
-                                              "https://via.placeholder.com/388x244"),
+                                              '${AppConstant.baseUrlImage}/logo/${_request.logo}'),
                                           fit: BoxFit.fill,
                                         ),
                                         shape: RoundedRectangleBorder(

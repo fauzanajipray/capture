@@ -16,7 +16,7 @@ class ProductSearchBloc extends Bloc<ProductListingEvent, ProductListingState> {
           ProductListingState stateData = await fetchProductList(
             event.pageKey,
             search: event.search ?? state.search,
-            categoryId: state.categoryId,
+            categoryId: "${event.categoryId ?? ''}",
           );
           emit(stateData);
         } else if (event is ResetPage) {

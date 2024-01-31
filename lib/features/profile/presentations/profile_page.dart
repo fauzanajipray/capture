@@ -1,3 +1,4 @@
+import 'package:capture/constant/app.dart';
 import 'package:capture/features/auth/cubit/auth_cubit.dart';
 import 'package:capture/features/profile/cubit/profile_cubit.dart';
 import 'package:capture/features/profile/cubit/profile_update_cubit.dart';
@@ -194,11 +195,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       leading: ClipOval(
                         child: Container(
-                          color: Theme.of(context).colorScheme.secondary,
-                          width: 60.0,
-                          height: 60.0,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          width: 57.0,
                           child: ExtendedImage.network(
-                            "https://via.placeholder.com/60x60",
+                            '${AppConstant.baseUrlImage}/avatars/user.png',
                             // headers: {"Authorization": token},
                             compressionRatio: kIsWeb ? null : 0.2,
                             clearMemoryCacheWhenDispose: true,
